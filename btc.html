@@ -1,0 +1,224 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>EOS</title>
+</head>
+<body>
+	<p>
+    <a href="https://dapp.mytokenpocket.vip/ram/index.html?t=3" target="_blank">RAM</a>：
+    <input type="text"  id="nowprice" value=""/>
+    minRAM：<input type="text" id="mixn"  value="0.0001"  width="52"/>
+    maxRAM：<input type="text" id="maxn"  width="52" value="0.532"/>
+    </p>
+    <p>
+    <a href="https://gateio.io/" target="_blank">EOS</a>：<input type="text"  id="EOSprice" value=""/>
+    minEOS：<input type="text" id="mixnEOS"  value="2"  width="52"/>
+    maxEOS：<input type="text" id="maxnEOS"  width="52" value="9.9"/>
+    </p>    
+    <p>mailto：<input type="text" name="toemail" id="toemail" value="m@kwh.cn"/> 
+	</p>
+
+【tips】：<span id="tips"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+汇率：<SPAN ID="huilv"></SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="https://alternative.me/crypto/fear-and-greed-index/" target="_blank">恐慌指数：<SPAN id="fear"></SPAN></a>
+	<p>
+	 RAM <input type="text" name="title" id="real-time-price" value="" /></p>
+     <p>EOS <input type="text" name="titleEOS" id="real-time-priceEOS" value="" /></p>
+	 <p>playtimes<input type="text" name="playtimeid" id="playtimeid" value="" />
+	</p>
+    
+ 
+
+    <audio  id="myaudio" controls="controls" style="width:150px; height:50px; ">
+	<source src="http://65.ierge.cn/12/182/365221.mp3" type="audio/mpeg">
+    </audio>
+     
+    
+    <div id="eos-price"></div>
+
+
+    <script src="https://dapp.mytokenpocket.vip/ram/jquery-3.3.1.min.js"></script>
+    <script>
+	    //通用代码开始
+		//在文中截取两个字符串间的内容
+		function cutstr(text,start,end){	
+			var s = text.indexOf(start);			
+			if(s>-1){			
+				var text2 = text.substr(s+start.length);//留中间与结尾			
+				var s2 = text2.indexOf(end);			
+				if(s2>-1){			
+					result = text2.substr(0,s2);//留中间			
+				}else result = '';			
+			}else result = '';			
+			return result;
+		}
+		//通用代码结束
+        var allocatedRam = '';
+        var playtimes=0;
+		var EOSpricePre=0;
+		var EOSpriceNow=0;
+		var RAMpricePre=0;
+		var RAMpriceNow=0;
+		var Mp3Url="http://65.ierge.cn/12/182/365221.mp3";//歌曲来自http://www.yy8844.cn/
+		var myAuto = document.getElementById('myaudio');
+		myAuto.loop = true;
+		function autoPlay(){
+					
+			myAuto.play();
+		}
+		
+   		function closePlay() {
+          	myAuto.loop = false;
+			myAuto.load();
+            myAuto.stop();           
+       } 
+
+		function realEosPrice() {
+			document.getElementById("playtimeid").value=playtimes;
+			var maxnEOS=document.getElementById("maxnEOS").value;
+			var mixnEOS=document.getElementById("mixnEOS").value;
+			$.get('https://api.coinmarketcap.com/v2/ticker/1765/').then(function (res) {
+                if (res.data) {
+                  document.getElementById("EOSprice").value= res.data.quotes.USD.price.toFixed(2); 
+				  EOSpriceNow=res.data.quotes.USD.price.toFixed(2);
+				  document.title=EOSpriceNow;				  
+				  if(EOSpricePre!=EOSpriceNow){EOSpricePre=EOSpriceNow;doTTS(EOSpriceNow); } 
+				  //调用文字转语音程序  doTTS('文字');             
+               }
+             });
+			if((EOSpriceNow > maxnEOS || EOSpriceNow < mixnEOS) &&EOSpriceNow!=0){ 
+					//超范围
+					if(document.getElementById("real-time-priceEOS").value!='EOS超范围'){
+						//首次超范围
+						window.open("https://gateio.io",'',"fullscreen=1");
+						document.getElementById("real-time-priceEOS").value='EOS超范围';
+						autoPlay();
+					}		 	
+			}else{
+				document.getElementById("real-time-priceEOS").value=EOSpriceNow;
+			}			
+        }        
+
+        // 实时价格 
+
+        function realTimePrice() {
+			document.getElementById("playtimeid").value=playtimes;
+			var maxn=document.getElementById("maxn").value;
+			var mixn=document.getElementById("mixn").value; 
+			$.get('https://tbeospre.mytokenpocket.vip/v1/ram_price').then(function (res) {
+                if (res.result === 0 && res.data) {
+                    var realPrice = parseFloat(1 * 1024 / res.data).toFixed(5);
+					document.getElementById("nowprice").value=realPrice+ 'EOS';	
+					if(realPrice > maxn || realPrice < mixn) { 
+					//超范围
+							
+							if(document.getElementById("real-time-price").value!='RAM超范围'){
+									//首次超范围
+									window.open("https://dapp.mytokenpocket.vip/ram/index.html?t=3",'',"fullscreen=1");
+									document.getElementById("real-time-price").value='RAM超范围';
+									autoPlay();
+							}
+					}else{
+							document.getElementById("real-time-price").value=realPrice;		
+					}
+                   
+                }
+            })
+        }
+	
+		//文字转语音代码开始
+		function createDiv2TTS(){
+			var Div2TTS=document.createElement("DIV");
+			Div2TTS.setAttribute("id","Div2TTS_div_id");	
+			Div2TTS.innerHTML ='<audio id="Div2TTS_autio_id" autoplay="autoplay"></audio>';
+			Div2TTS.setAttribute("style","display:none;");
+			//btn.setAttribute("style","width:400px;height:400px;background-color:#FF0004;");
+			document.body.appendChild(Div2TTS);		
+		}
+		
+		function doPlayMp3(Url){
+					var ttsDiv = document.getElementById('Div2TTS_div_id');
+					var ttsAudio = document.getElementById('Div2TTS_autio_id');
+					// 这样为什么替换不了播放内容
+					/*var ssrcc = 'http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=10&text='+ttsText;
+					document.getElementById('tts_source_id').src=ssrcc;*/			
+					// 这样就可实现播放内容的替换了
+					ttsDiv.removeChild(ttsAudio);
+					var au1 = '<audio id="Div2TTS_autio_id" autoplay="autoplay">';
+					var sss = '<source id="Div2TTS_source_id" src="'+Url+'" type="audio/mpeg">';
+					var eee = '<embed id="Div2TTS_embed_id" height="0" width="0" src="">';
+					var au2 = '</audio>';
+					ttsDiv.innerHTML = au1 + sss + eee + au2;			
+					ttsAudio = document.getElementById('Div2TTS_autio_id');	
+					ttsAudio.volume =200;	
+					ttsAudio.play();
+		}
+		
+		function doTTS(ttsText){
+					var mp3FileUrl = 'http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=9&text='+ttsText;
+					doPlayMp3(mp3FileUrl);
+					//可以用于常规MP3文件播放
+		}
+		//文字转语音代码结束
+		
+	
+
+
+	
+//直接通过XMLHttpRequest对象获取远程网页源代码
+ /*
+ url:网址
+ start：字符串前缀
+ end：字符串后缀
+ target：字符串显示位置的ID innerHTML
+ */
+
+		function getSource(url,start,end,target) { 
+
+var Div2TTS=document.createElement("textarea");
+			Div2TTS.setAttribute("id","Div2source_div_id");	
+			Div2TTS.setAttribute("style","display:none;");
+			document.body.appendChild(Div2TTS);		
+	//根据window.XMLHttpRequest对象是否存在使用不同的创建方式 
+	if (window.XMLHttpRequest) { 
+	xmlHttp = new XMLHttpRequest(); //FireFox、Opera等浏览器支持的创建方式 
+	} else { 
+	xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");//IE浏览器支持的创建方式 
+	}  
+	xmlHttp.onreadystatechange =function writeSource() { 
+	if (xmlHttp.readyState == 4) { 
+	document.getElementById("Div2source_div_id").value = xmlHttp.responseText; 
+	
+	document.getElementById(target).innerHTML=cutstr(document.getElementById("Div2source_div_id").value,start,end);
+	document.body.removeChild(document.getElementById("Div2source_div_id"));
+	} 
+	}  //设置回调函数 
+	xmlHttp.open("GET", url, true); 
+	xmlHttp.send(null); 
+} 
+//将远程网页源代码写入页面文字区
+
+var aaaaa='<div class="fng-circle" style="background-color: #d17339; padding: 13px 8px;">';
+var bbbbb='</div>';
+
+
+$.get("https://data.block.cc/api/v1/exrate",function(res){document.getElementById("huilv").innerHTML=res.data.rates.CNY;});
+//汇率
+	
+ 	createDiv2TTS();
+        setInterval('realEosPrice()', 30000);
+        setInterval('realTimePrice()', 10000);
+        realTimePrice();
+        realEosPrice();	
+getSource("https://alternative.me/crypto/fear-and-greed-index/",aaaaa,bbbbb,"fear");
+    </script>
+    <a href="https://exitscam.me/play"  target="_blank" style="">FOMO3D</a>
+    
+  
+
+</body>
+</html>
