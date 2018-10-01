@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>提取字符串工具</title>
+</head>
+
+<body><form id="form1" name="form1" method="post" action="">
+
+<table width="771" border="0" cellpadding="2" cellspacing="1" bgcolor="#000000">
+  <tr>
+    <td colspan="2" bgcolor="#FFFFFF"><div align="center" style="font-size: 24px">
+      <p>&nbsp;</p>
+     提取代码中匹配的字符串工具
+      <p>&nbsp;</p>
+    </div></td>
+  </tr>
+  <tr>
+    <td width="170" bgcolor="#FFFFFF"><div align="right">关键字前缀：</div></td>
+    <td width="590" bgcolor="#FFFFFF"><label>
+      <input name="prefixkw" type="text" size="60" />
+    </label></td>
+  </tr>
+  <tr>
+    <td width="170" bgcolor="#FFFFFF"><div align="right">关键字后缀：</div></td>
+    <td width="590" bgcolor="#FFFFFF"><label>
+      <input name="postfixkw" type="text" size="60" />
+    </label></td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFFF"><div align="right">结果添加前缀：</div></td>
+    <td bgcolor="#FFFFFF"><label>
+      <input name="prefix" type="text" size="50" />
+      <input type="checkbox" name="replacepre" value="替换关键字前缀" />
+    替换关键字前缀</label></td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFFF"><div align="right">结果添加后缀：</div></td>
+    <td bgcolor="#FFFFFF"><label>
+      <input name="postfix" type="text" size="50" />
+      <input type="checkbox" name="replacepost" value="替换关键字后缀" />
+      替换关键字后缀</label></td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFFF">&nbsp;</td>
+    <td bgcolor="#FFFFFF"><p>
+      <label>
+      <input type="checkbox" name="delrepeat" value="删除重复项" />
+      删除重复项</label>
+      </p>
+      <p>
+        <input type="button" name="Submitmatch" value="开始匹配" alt="匹配和请查看结果栏" onclick="matchme()" />
+        </p></td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFFF"><div align="right">源码：</div></td>
+    <td bgcolor="#FFFFFF"><label>
+      </label>
+      <table width="100%" border="0" cellspacing="3" cellpadding="0">
+        <tr>
+          <td width="67%" rowspan="5"><textarea name="code" cols="50" rows="10"></textarea></td>
+          <td width="33%">总个数：
+            <label>
+            <input name="num" type="text" size="5" />
+          </label></td>
+        </tr>
+        <tr>
+          <td>开始值：
+            <input name="start" type="text" size="5" /></td>
+        </tr>
+        <tr>
+          <td></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" name="addkw" value="添加关键字前后缀" />
+            添加关键字前后缀
+          <label></label></td>
+        </tr>
+        <tr>
+          <td><div align="center">
+            <input type="button" name="Submit2" value="生成源码"  alt="生成的结果请查看源码框" onclick="buildme()"/>
+          </div></td>
+        </tr>
+      </table>
+    <label></label></td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFFF"><div align="right">结果：</div></td>
+    <td bgcolor="#FFFFFF"><textarea name="result" cols="80" rows="20"></textarea></td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFFF"><div align="right">查询举例：</div></td>
+    <td bgcolor="#FFFFFF"><fieldset>
+      <legend>源码</legend>
+      #header_bg {<br />
+      
+WIDTH: 100%; BACKGROUND: url(/images/system/t3/header_bg.gif) #fff repeat-x; FLOAT: left; HEIGHT: 588px; PADDING-TOP: 42px<br />
+
+}<br />
+
+#header_bg1 {<br />
+
+WIDTH: 100%; BACKGROUND: url(/images/system/t3/header_bg2.gif) #fff repeat-x; FLOAT: left; PADDING-TOP: 42px<br />
+
+}
+    </fieldset><br />
+
+	<fieldset><legend>关键字前缀</legend>
+      /images/system/
+    </fieldset><br />
+
+	<fieldset>
+      <legend>关键字后缀</legend>
+      .gif
+	</fieldset><br />
+
+	<fieldset><legend>结果添加前缀</legend>
+      http://www.nub.cn
+    </fieldset><br />
+
+	<fieldset>
+      <legend>结果添加后缀<br />
+      right      </legend>
+      </fieldset><br />
+
+	<fieldset>
+      <legend>结果<br />
+      http://www.nub.cn/images/system/t3/header_bg.gifright
+      <br />
+	</legend>
+      http://www.nub.cn/images/system/t3/header_bg2.gifright
+	</fieldset>	</td>
+  </tr>
+</table>
+</form>
+<script language="javascript">
+
+function matchme() 
+{
+	//prefixkw, postfixkw, prefix,replacepre,postfix,replacepost,code,result,num,start,buildtype,addkw
+	var prefixkw =document.forms.form1.prefixkw.value;
+	var postfixkw=document.forms.form1.postfixkw.value;
+	
+	var prefix=document.forms.form1.prefix.value;
+	var replacepre=document.forms.form1.replacepre.checked;//替换关键字前缀
+	var postfix=document.forms.form1.postfix.value;
+	var replacepost=document.forms.form1.replacepost.checked;//替换关键字后缀
+	
+	
+	//是否替换---
+	var prefixkwRPL="";
+	var postfixkwRPL="";
+	
+	if(replacepre!=true){prefixkwRPL=prefixkw;}
+	
+	if(replacepost!=true){postfixkwRPL=postfixkw;}
+	//---是否替换
+	
+	
+	
+	var delrepeat=document.forms.form1.delrepeat.checked;//删除重复项
+	
+	var code=document.forms.form1.code.value;
+	var result=document.forms.form1.result.value;
+	
+	
+	//匹配放到字符串数组
+	var t____t=code.split(prefixkw);
+	var arr= new Array();
+	
+	for (i___i in t____t)
+	{
+		if(t____t[i___i].indexOf(postfixkw)>-1)
+		{		
+		arr.push(prefix+prefixkwRPL+t____t[i___i].substr(0,t____t[i___i].indexOf(postfixkw))+postfixkwRPL+postfix);
+		}
+	}
+	
+	
+	//是否删除重复项
+	var arrresult=new Array();
+	
+	if(delrepeat==true)
+	{
+	arrresult=unique(arr);
+	
+	}else{
+	arrresult=arr;
+	}
+	
+	
+	//输出
+	var _resultstr="";
+	
+	for (i___i in arrresult)
+	{
+		_resultstr+="\r"+arrresult[i___i];
+	}
+	document.forms.form1.result.value=_resultstr;
+} 
+
+function buildme() 
+{
+var prefixkw =document.forms.form1.prefixkw.value;
+var postfixkw=document.forms.form1.postfixkw.value;
+var code=document.forms.form1.code.value;
+var num=document.forms.form1.num.value;
+var start=document.forms.form1.start.value;
+var addkw=document.forms.form1.addkw.checked;//添加关键字前后缀
+var arr=new Array();
+var __t;
+for(i=0;i<num;i++)
+{
+__t=i+start*1+0;
+arr.push(__t);
+}
+
+
+//判断类型生成字符串数组
+
+//将数组每个添加前后缀
+
+//输出
+	var _resultstr="";
+	var arrresult=arr;
+	for (i___i in arrresult)
+	{
+	if(addkw==true)
+	{
+	_resultstr+="\r"+prefixkw+arrresult[i___i]+postfixkw;
+	}
+	else
+	{
+	_resultstr+="\r"+arrresult[i___i];
+	}
+		
+	}
+	document.forms.form1.code.value=_resultstr;
+
+} 
+
+
+//删除数组中重复项的方法
+function unique(array) {
+    var ret = [], record = {},it,tmp,obj = "__object__", bak = [],i,len;
+    var type ={
+        "number": function(n) { return "__number__" + n; },
+        "string": function(n) { return "__string__" + n; },
+        "boolean": function(n) { return "__boolean__" + n; },
+        "undefined": function(n) { return "__undefined__"; },
+        "object": function(n) {
+            return n === null ? "__null__" : obj in n ? n[obj] : ( n[obj] = obj + bak.push(n) );
+        }
+    };
+    for (i = 0, len = array.length; i < len; i++) {
+        it = array[i]; tmp = type[typeof it](it);
+        if (!(tmp in record)) { ret.push(it); record[tmp] = true; }
+    }
+    for (i = 0, len = bak.length; i < len; delete bak[i++][obj]) { }
+    return ret;
+}
+</script>
+</body>
+</html>
