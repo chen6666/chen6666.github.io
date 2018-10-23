@@ -337,7 +337,7 @@ putHtmlTable();//输出html
 //获取在线数据
 $.get('http://rra.cn/t.php').then(
 	function (res) {
-		//alert(res);
+	alert(res);
 	var resjson=JSON.parse(res);
 	//document.getElementById("textfield1").value=9;
 		for(var item in resjson){ 
@@ -345,7 +345,7 @@ $.get('http://rra.cn/t.php').then(
 		 if(item.length>4)
   			{
   				 document.getElementById(item).value= resjson[item];
-				 //	alert(item);		
+				 alert(item);		
  			}
  
         }  
