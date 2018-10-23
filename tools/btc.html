@@ -257,6 +257,7 @@ getSource("https://alternative.me/crypto/fear-and-greed-index/",aaaaa,bbbbb,"fea
     } 
 </style>
 <input type="button" name="renewbutton" id="renewbutton" value="刷新表格" onClick="dorenew()">
+<input type="button" name="sendJsonbutton" id="sendJsonbutton" value="保存" onClick="sendJson()">
 <div id="kk"></div>
 <script language="javascript" type="text/javascript">
 
@@ -273,6 +274,7 @@ arr0[7]=parseFloat(getarr07(arr[1], arr[3]).toFixed(2));
 
 var arr1 = new Array("比例","价格","价值","利润");
 var arr2 = new Array();
+
 //  初始化二维数组
 function initializtion(){
  for(var i = 0; i <4;i++){
@@ -290,8 +292,10 @@ function initializtion(){
 		arr2[3][j] = parseFloat((arr2[2][j]-arr[1]*arr[0]).toFixed(2));//利润
        }
 }
+
+//输出html		
 function putHtmlTable() {
-	initializtion();
+	initializtion();//数据准备
 	var arrhtml= arr2;
 	var html='<table class="btctable" border="0" cellspacing="0" cellpadding="0" width="900px"><tbody><tr><th colspan="9">名义量<input name="textfield0" type="text" id="textfield0" value="'+arr[0]+'" size="11" maxlength="11">成交价<input name="textfield1" type="text" id="textfield1" value="'+arr[1]+'" size="11" maxlength="11">实际量<input name="textfield2" type="text" id="textfield2" value="'+arr[2]+'" size="11" maxlength="11"  readonly>目标价<input name="textfield3" type="text" id="textfield3" value="'+arr[3]+'" size="11" maxlength="11"></th></tr>';
 	
@@ -311,7 +315,11 @@ function putHtmlTable() {
    html=html+' </tbody></table>';    
 document.getElementById("kk").innerHTML=html;
 }
-putHtmlTable();
+
+//输出html
+putHtmlTable();        
+
+//按新参数刷新表格内的数据
 function dorenew() {
 arr[0]=document.getElementById("textfield0").value;//名义量
 arr[1]=document.getElementById("textfield1").value;//成交价
@@ -322,9 +330,54 @@ arr[3]=document.getElementById("textfield3").value;//目标价
        arr0[j]=document.getElementById('textfieldv'+j).value;
        }  
 arr0[7]=parseFloat(getarr07(arr[1], arr[3]).toFixed(2));
-putHtmlTable();
+
+putHtmlTable();//输出html
 }
+
+//获取在线数据
+$.get('http://rra.cn/t.php').then(
+	function (res) {
+		//alert(res);
+	var resjson=JSON.parse(res);
+	//document.getElementById("textfield1").value=9;
+		for(var item in resjson){ 
+		
+		 if(item.length>4)
+  			{
+  				 document.getElementById(item).value= resjson[item];
+				 //	alert(item);		
+ 			}
+ 
+        }  
+	dorenew();
+	}
+);					
+
+
+   function sendJson() {
+
+        var Jsonstr={};
+		for(var j = 0; j < 4; j++){
+			 Jsonstr['textfield'+j] =document.getElementById('textfield'+j).value;
+       	} 	
+		for(var j = 0; j < 8; j++){
+			 Jsonstr['textfieldv'+j] =document.getElementById('textfieldv'+j).value;
+       	} 
+			
+        $.ajax({
+            type : "POST",  //提交方式
+            url : "http://rra.cn/w.php",//路径,www根目录下
+            data : {
+                "data" : Jsonstr
+            },//数据，这里使用的是Json格式进行传输
+            success : function(result) {//返回数据根据结果进行相应的处理
+                //alert(result);
+				document.getElementById('textfieldvresult').innerHTML=result;
+            }
+        });
+    }
 </script>
+<div id="textfieldvresult"></div>
 
 	<table width="80%" border="0" cellspacing="0" cellpadding="0">
 <tr>
