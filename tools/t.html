@@ -2,17 +2,25 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>无标题文档</title>
+<title>get</title>
 </head>
 
 <body>
-<div></div>
-<button >dfsdf</button>
-  <script src="https://dapp.mytokenpocket.vip/ram/jquery-3.3.1.min.js"></script>
-    <script>
-$("button").click(function(){
-   $("div").load('http://rra.cn/t.php');
-});
+<script>
+function dosoth(jsondata){
+var resjson=JSON.parse(jsondata);
+for(var item in resjson){ 
+		
+		 if(item.length>4)
+  			{
+				alert(resjson[item]);
+  				// document.getElementById(item).value= resjson[item];	
+ 			}
+ 
+        }  	
+	
+	}
 </script>
+<script src="http://rra.cn/get.php"></script>
 </body>
 </html>
