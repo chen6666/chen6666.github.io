@@ -338,15 +338,15 @@ putHtmlTable();//输出html
 //alert('http://rra.cn/t.php');
 $.get('http://rra.cn/t.php').then(
 	function (res) {
-	alert(res);
+//alert(res);
 	var resjson=JSON.parse(res);
 	//document.getElementById("textfield1").value=9;
 		for(var item in resjson){ 
 		
 		 if(item.length>4)
   			{
-  				 document.getElementById(item).value= resjson[item];
-				 alert(item);		
+  				 document.getElementById(item).value= resjson[item];
+//alert(item);		
  			}
  
         }  
