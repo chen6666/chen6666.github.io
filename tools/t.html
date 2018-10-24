@@ -20,7 +20,7 @@
                 body.appendChild(inf);                          //引入a页面
 
                 inf.onload=function(){
-                    inf.src='https://www.nub.cn/tools/t.html'       //iframe加载完成，加载www.test.com域下边的空白页b.html
+                    inf.src='http://www.nub.cn/tools/t.html'       //iframe加载完成，加载www.test.com域下边的空白页b.html
 					alert(inf.contentWindow.name);
                     console.log(inf.contentWindow.name)        //输出window.name中的数据
                     body.removeChild(inf)                      //清除iframe
