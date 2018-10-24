@@ -336,7 +336,7 @@ putHtmlTable();//输出html
 
 //获取在线数据
 //alert('http://rra.cn/t.php');
-$.get('http://rra.cn/t.php').then(
+$.get('http://rra.cn/eos.php').then(
 	function (res) {
 //alert(res);
 	var resjson=JSON.parse(res);
@@ -367,7 +367,7 @@ $.get('http://rra.cn/t.php').then(
 			
         $.ajax({
             type : "POST",  //提交方式
-            url : "http://rra.cn/w.php",//路径,www根目录下
+            url : "http://rra.cn/eos.php",//路径,www根目录下
             data : {
                 "data" : Jsonstr
             },//数据，这里使用的是Json格式进行传输
