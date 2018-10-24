@@ -6,12 +6,27 @@
 </head>
 
 <body>
-	<script src="https://dapp.mytokenpocket.vip/ram/jquery-3.3.1.min.js"></script>
-<script>
-function dosoth(jsondata){
-	alert jsondata;
-}
-</script>
-<script src="http://rra.cn/get.php"></script>
+
+<button>click!</button>
+
+        <script type="text/javascript">
+
+            var a=document.getElementsByTagName("button")[0];
+
+            a.onclick=function(){                               //button添加click事件
+                var inf=document.createElement("iframe");       //创建iframe
+                inf.src="http://rra.cn/get.php"  //加载数据
+                var body=document.getElementsByTagName("body")[0];
+                body.appendChild(inf);                          //引入a页面
+
+                inf.onload=function(){
+                    inf.src='https://www.nub.cn/tools/tp.html'       //iframe加载完成，加载www.test.com域下边的空白页b.html
+					alert(inf.contentWindow.name);
+                    //console.log(inf.contentWindow.name)        //输出window.name中的数据
+                    body.removeChild(inf)                      //清除iframe
+                }
+            }
+
+        </script>
 </body>
 </html>
