@@ -82,7 +82,7 @@ td{ border:#ccc solid 1px; padding:5px; }
 			document.getElementById("playtimeid").value=playtimes;
 			var maxnEOS=document.getElementById("maxnEOS").value;
 			var mixnEOS=document.getElementById("mixnEOS").value;
-			$.get('https://api.coinmarketcap.com/v2/ticker').then(function (res) {
+			$.get('https://api.coinmarketcap.com/v2/ticker/1765').then(function (res) {
 			if (res.data) {
 				  document.getElementById("EOSprice").value= res.data.quotes.USD.price.toFixed(2); 
 				  EOSpriceNow=res.data.quotes.USD.price.toFixed(2); 				  
