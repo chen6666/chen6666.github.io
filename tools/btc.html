@@ -264,10 +264,17 @@ getSource("https://alternative.me/crypto/fear-and-greed-index/",aaaaa,bbbbb,"fea
 function getarr07(price, target) {
     return (target-price)/ price*100;
 }
+	
+function getvol(a){
+	return a*（1-0.002*2);
+}
+	
 var arr = new Array(4);//名义量，成交价，实际量，目标价
+	
+
 arr[0]=100;//名义量
 arr[1]=10;//成交价
-arr[2]=arr[0]*0.996;//实际量
+arr[2]=getvol(arr[0]);//实际量
 arr[3]=15;//目标价
 var arr0 = [-30,-20,-3,0,5,15,20,0];//设置参考利润比例
 arr0[7]=parseFloat(getarr07(arr[1], arr[3]).toFixed(2));
@@ -323,7 +330,7 @@ putHtmlTable();
 function dorenew() {
 arr[0]=document.getElementById("textfield0").value;//名义量
 arr[1]=document.getElementById("textfield1").value;//成交价
-arr[2]=arr[0]*0.998;//实际量
+arr[2]=getvol(arr[0]);//实际量
 arr[3]=document.getElementById("textfield3").value;//目标价
 //设置参考利润比例
    for(var j = 0; j < 8; j++){
