@@ -67,7 +67,7 @@ td{ border:#ccc solid 1px; padding:5px; }
 		var RAMpriceNow=0;
 		var Mp3Url="http://65.ierge.cn/12/182/365221.mp3";//歌曲来自http://www.yy8844.cn/
 		var myAuto = document.getElementById('myaudio');
-	        myAuto.loop = true;
+		myAuto.loop = true;
 		function autoPlay(){
 					
 			myAuto.play();
@@ -82,11 +82,11 @@ td{ border:#ccc solid 1px; padding:5px; }
 			document.getElementById("playtimeid").value=playtimes;
 			var maxnEOS=document.getElementById("maxnEOS").value;
 			var mixnEOS=document.getElementById("mixnEOS").value;
-			$.get('https://api.coinmarketcap.com/v2/ticker/1765').then(function (res) {
-			if (res.data) {
-				  document.getElementById("EOSprice").value= res.data.quotes.USD.price.toFixed(2); 
-				  EOSpriceNow=res.data.quotes.USD.price.toFixed(2); 				  
-			document.title=EOSpriceNow;				  
+			$.get('https://api.coinmarketcap.com/v2/ticker/1765/').then(function (res) {
+                if (res.data) {
+                  document.getElementById("EOSprice").value= res.data.quotes.USD.price.toFixed(2); 
+				  EOSpriceNow=res.data.quotes.USD.price.toFixed(2);
+				  document.title=EOSpriceNow;				  
 				  if(EOSpricePre!=EOSpriceNow){EOSpricePre=EOSpriceNow;doTTS(EOSpriceNow); } 
 				  //调用文字转语音程序  doTTS('文字');             
                }
