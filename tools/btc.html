@@ -358,7 +358,111 @@ $.get('http://rra.cn/eos.php').then(
     }
 </script>
 提示：<div id="textfieldvresult"></div>
+<hr>
+id码:
+<input type="text" name="linkid" id="linkid" size="5" readonly>
+名称:
+<input type="text" name="linktext" id="linktext">
+链接:
+<input type="text" name="linkurl" id="linkurl">
+md5:
+<input name="md5code" type="text" id="md5code" size="5"  placeholder="姓拼音">
+<input type="button" name="btadd" id="btadd" value="添加"   onClick="listDO(this)">
+<input type="button" name="btupdate" id="btupdate" value="更新"   onClick="listDO(this)">
+</p>
+<div  id="div2links"></div>
+  <script type="text/javascript"> 
+  //简单的加密过程
+  function compile(code)  
+{    
+   var c=String.fromCharCode(code.charCodeAt(0)+code.length);  
+   for(var i=1;i<code.length;i++){  
+   c+=String.fromCharCode(code.charCodeAt(i)+code.charCodeAt(i-1));  
+   }  
+   return escape(c);  
+}    
+  
+ var listsql="SELECT * FROM `links`";
+ function listDO(e){
+	var reg = /[\u4e00-\u9fa5]/g;
+	var names = e.value.match(reg);
+	swi = names.join("");
+	var linkid=parseInt(document.getElementById("linkid").value);
+	var linktext=document.getElementById("linktext").value;
+	var linkurl=document.getElementById("linkurl").value;
+	var md5code=document.getElementById("md5code").value;
+	switch(swi)
+	{
+		case "更新":		      
+			if(compile(md5code)=='g%CB%CD%D3' && linktext.length>0 && linkurl.length>0 && linkid>0){
+			listsql="UPDATE links SET linktext ='"+linktext+"' , linkurl = '"+linkurl+"' WHERE linkid = "+linkid;			
+			DosendSqlJson();
+				}		
+		break;
+		case "添加":   
+			if(compile(md5code)=='g%CB%CD%D3' && linktext.length>0 && linkurl.length>0){
+			listsql="INSERT INTO `links` (`linktext`, `linkurl`) VALUES ('"+linktext+"', '"+linkurl+"')";	
+			DosendSqlJson();
+				}
+		break;
+	
+	   default:
+		var childArr = e.parentElement.parentElement.childNodes;
+		document.getElementById("linkid").value= e.value.replace(/[^0-9]/ig,"");
+		document.getElementById("linktext").value=childArr[1].firstChild.innerHTML;
+		document.getElementById("linkurl").value=childArr[2].innerHTML;
+	}	  
+}
+//listsql约定为sql
+function obj2arr(data)//用户将json数组对象解析成二维数组
+{
+    var arr = [];
+    for(var i in data)
+    {
+        arr[i] = [];
+        for(var j in data[i])
+        {
+            arr[i].push(data[i][j]);
+        }
+    }
+    return arr;
+}   
+    
+function listRender(getdata) {//将解析出来的二维数组显示
+    var div2links=document.getElementById("div2links");
+    var tab='<table width="80%" border="0" cellspacing="0" cellpadding="0"><tr><td>编辑</td><td>名称</td><td>网址</td></tr>';
+    var arr =[];
+    arr = obj2arr(getdata);
 
+    for(var  i =0;i<arr.length;i++)
+    {
+        tab+="<tr>";
+		tab+="<td>"+'<input type="button" name="btupdate1" id="btupdate1" value="修改'+ arr[i][0]+'"  onClick="listDO(this)">' +"</td>";
+		tab+="<td>"+'<a href="'+ arr[i][2]+'"  target="_blank" style="">'+ arr[i][1]+'</a>' +"</td>";
+		tab+="<td>"+ arr[i][2]+"</td>";
+        tab+="</tr>";
+    }
+    tab+="</table>";
+    div2links.innerHTML=tab;
+} 
+//获取在线数据
+function DosendSqlJson() {       
+		var Jsonstr={};
+		Jsonstr['sql'] =listsql;
+        $.ajax({
+            type : "POST",  //提交方式
+            url : "http://rra.cn/links.php",//路径
+            data : {"data" : Jsonstr},
+            success : function(result) {//返回数据根据结果进行相应的处理
+ listRender(JSON.parse(result));//返回数据显示
+            }
+        });
+    }
+DosendSqlJson();
+</script>
+	
+	
+	
 	<table width="80%" border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td>网站</td>
